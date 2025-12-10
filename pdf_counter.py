@@ -8,57 +8,6 @@ from pathlib import Path
 
 from utils.tree import CostcoTree, pencil
 
-import sys
-import os
-import platform
-
-def check_dependencies():
-    """Check and install required packages"""
-    required_packages = ['pandas', 'numpy', 'tkinter']
-    missing_packages = []
-
-    for package in required_packages[:2]:  # Check pandas and numpy
-        try:
-            __import__(package)
-        except ImportError:
-            missing_packages.append(package)
-
-    if missing_packages:
-        print(f"Missing packages: {', '.join(missing_packages)}")
-        response = input("Install automatically? (y/n): ")
-        if response.lower() == 'y':
-            import subprocess
-            for package in missing_packages:
-                print(f"Installing {package}...")
-                subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-
-        # Re-check
-        for package in missing_packages:
-            try:
-                __import__(package)
-            except ImportError:
-                print(f"Failed to install {package}. Please install manually.")
-                print(f"Run: pip install {package}")
-                return False
-
-    return True
-
-def create_launcher_scripts():
-    """Create platform-specific launcher scripts"""
-    current_platform = platform.system()
-
-    if current_platform == "Windows":
-        # Create Windows batch file
-        batch_content = """@echo off
-        echo Starting CSV Calculator...
-        python "%~dp0pdf_counter.py"
-        pause"""
-
-        with open("run_csv_calculator.bat", "w") as f:
-            f.write(batch_content)
-
-        print("Created 'run_csv_calculator.bat' - Double-click this to run on Windows")
-
 class PDFPageCounter:
     def __init__(self, root):
         self.root = root
@@ -189,7 +138,7 @@ class PDFPageCounter:
             width=10
         ).pack(side=tk.LEFT)
 
-        self.save_location = tk.StringVar(value="Current Directory")
+        self.save_location = tk.StringVar(value="Pick a folder to save the output file!!")
         self.location_label = tk.Label(
             location_frame,
             textvariable=self.save_location,
@@ -229,7 +178,7 @@ class PDFPageCounter:
             # fg="white",
             font=("Arial", 12, "bold"),
             padx=20,
-            pady=10,
+            pady=13,
             relief=tk.RAISED,
             cursor="hand2"
         )
@@ -528,22 +477,6 @@ def main():
 
 if __name__ == "__main__":
     # Check for required imports
-    print("="*60)
-    print("PDF Counter")
-    print("="*60)
-    print(f"Platform: {platform.system()} {platform.release()}")
-    print(f"Python: {sys.version}")
-    print()
-
-    # Check dependencies
-    if not check_dependencies():
-        print("\nDependencies missing. Please install required packages.")
-        print("Run: pip install pandas numpy")
-        input("Press Enter to exit...")
-        sys.exit(1)
-
-    # Create launcher scripts
-    create_launcher_scripts()
     try:
         import pandas as pd
     except ImportError:
