@@ -8,7 +8,7 @@ import pdfplumber
 from openpyxl import Workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
 
-from utils.embedded import csv_str
+from utils.csv_string import csv_str
 import os
 
 def pencil():
